@@ -1,17 +1,14 @@
-"""Train and evaluate a linear regression model on the power plant dataset.
+"""在发电厂数据集上训练并评估线性回归模型。
 
-This module follows the workflow described in the experiment guide:
-1. Load the ``Folds5x2_pp.csv`` dataset that contains weather measurements and
-   the corresponding electrical power output.
-2. Split the dataset into training and testing subsets.
-3. Train a :class:`~sklearn.linear_model.LinearRegression` model using the
-   training data.
-4. Evaluate the model with common regression metrics.
-5. Visualise the predicted versus actual power output values.
+本模块遵循实验指南中描述的工作流程：
+1. 加载包含天气观测值及对应发电功率的 ``Folds5x2_pp.csv`` 数据集。
+2. 将数据集划分为训练集和测试集。
+3. 使用训练数据训练 :class:`~sklearn.linear_model.LinearRegression` 模型。
+4. 使用常见的回归指标评估模型。
+5. 可视化预测值与真实发电功率之间的关系。
 
-The script exposes a simple command line interface so the experiment can be
-reproduced from the terminal. Use ``python -m src.linear_regression --help`` to
-inspect the available options.
+该脚本提供了一个简单的命令行界面，因此可以在终端中复现实验。使用
+``python -m src.linear_regression --help`` 查看可用选项。
 """
 from __future__ import annotations
 
@@ -33,7 +30,7 @@ DATASET_FILENAME = "Folds5x2_pp.csv"
 
 @dataclass
 class ModelResult:
-    """Container for model evaluation outputs."""
+    """用于保存模型评估结果的容器。"""
 
     model: LinearRegression
     y_test: pd.Series
@@ -45,24 +42,23 @@ class ModelResult:
 
 
 def default_dataset_path() -> Path:
-    """Return the default location of the dataset within the repository."""
+    """返回仓库中数据集的默认位置。"""
 
     return Path(__file__).resolve().parent.parent / "data" / DATASET_FILENAME
 
 
 def load_dataset(path: Path) -> pd.DataFrame:
-    """Load the power plant dataset.
+    """加载发电厂数据集。
 
-    Parameters
+    参数
     ----------
     path:
-        Path to the CSV file containing the dataset.
+        指向包含数据集的 CSV 文件的路径。
 
-    Returns
+    返回值
     -------
     pandas.DataFrame
-        Dataset with the expected feature columns (AT, V, AP, RH) and the
-        target column (PE).
+        包含预期特征列（AT、V、AP、RH）和目标列（PE）的数据集。
     """
 
     data = pd.read_csv(path)
@@ -78,7 +74,7 @@ def load_dataset(path: Path) -> pd.DataFrame:
 
 
 def split_features_and_target(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
-    """Split the dataframe into features (X) and target (y)."""
+    """将数据框拆分为特征（X）和目标（y）。"""
 
     feature_columns: list[str] = ["AT", "V", "AP", "RH"]
     target_column = "PE"
@@ -93,7 +89,7 @@ def train_model(
     test_size: float,
     random_state: int,
 ) -> ModelResult:
-    """Train the linear regression model and evaluate it on a test split."""
+    """训练线性回归模型并在测试集上进行评估。"""
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size, random_state=random_state
@@ -125,7 +121,7 @@ def plot_predictions(
     save_path: Path | None = None,
     show_plot: bool = False,
 ) -> None:
-    """Generate a scatter plot comparing true and predicted values."""
+    """生成比较真实值和预测值的散点图。"""
 
     y_true = np.asarray(list(y_true))
     y_pred = np.asarray(list(y_pred))
@@ -154,7 +150,7 @@ def plot_predictions(
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command line arguments for the training script."""
+    """解析训练脚本的命令行参数。"""
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -193,7 +189,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Entry point for running the experiment from the command line."""
+    """从命令行运行实验的入口函数。"""
 
     args = parse_args()
 
