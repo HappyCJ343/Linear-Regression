@@ -1,96 +1,107 @@
-# Linear Regression Power Plant Experiment
+# 线性回归电厂输出预测实验
 
-This repository contains a compact implementation of the linear regression
-experiment described in the "线性回归模型实验指导" hand-out. The project trains a
-linear model to predict the net hourly electrical energy output (`PE`) of a
-combined cycle power plant from four environmental measurements (`AT`, `V`,
-`AP`, `RH`).
+本项目实现了《线性回归模型实验指导》中的线性回归实验。
+ 该实验通过训练一个**线性模型（Linear Regression）**，根据四个环境参数预测燃气-蒸汽联合循环电厂的净小时发电量（`PE`）。
 
-## Project layout
+模型输入的四个环境参数包括：
+
+- `AT`：环境温度（Ambient Temperature）
+- `V`：排气真空度（Exhaust Vacuum）
+- `AP`：环境压力（Ambient Pressure）
+- `RH`：相对湿度（Relative Humidity）
+
+------
+
+## 项目结构
 
 ```
 .
-├── data/                     # Sample copy of the Folds5x2_pp dataset
+├── data/                     # 样例数据集 Folds5x2_pp.csv
 │   └── Folds5x2_pp.csv
-├── plots/                    # Generated automatically when you run the script
-├── requirements.txt          # Python dependencies
+├── plots/                    # 运行脚本后自动生成的可视化图像
+├── requirements.txt          # Python 依赖文件
 ├── src/
-│   └── linear_regression.py  # Command line experiment script
+│   └── linear_regression.py  # 命令行实验脚本
 └── README.md
 ```
 
-The dataset bundled in `data/` contains the header and the first 20 samples from
-the original UCI "Combined Cycle Power Plant" dataset so the workflow can be
-executed offline. You can replace it with the full dataset if you have access to
-it.
+------
 
-## Environment setup
+## 环境配置
 
-The experiment only relies on a handful of standard scientific Python packages.
-You can install them in a virtual environment of your choice:
+本实验仅依赖少量常用的科学计算 Python 库。
+ 建议在虚拟环境中安装依赖：
 
-```bash
+```
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-> The minimum supported Python version is 3.10, matching the versions required
-> in the original lab instructions (Python 3.7 or newer also works for the
-> dependencies used here).
+> 最低支持的 Python 版本为 3.10（根据原实验要求，Python 3.7 及以上版本均可正常运行）。
 
-## Running the experiment
+------
 
-Execute the script with Python to train the model, evaluate it on a random test
-split and create the visualisation of predicted versus actual power output.
+## 运行实验
 
-```bash
+直接运行主脚本即可完成模型训练、测试集评估及可视化结果生成：
+
+```
 python -m src.linear_regression
 ```
 
-By default the script uses the dataset located at `data/Folds5x2_pp.csv`, holds
-25% of the rows for evaluation, prints the model coefficients and performance
-metrics, and saves a scatter plot to `plots/actual_vs_predicted.png`.
+默认设置如下：
 
-Use `--help` to explore the available options:
+- 数据文件：`data/Folds5x2_pp.csv`
+- 测试集比例：25%
+- 自动打印模型系数与性能指标
+- 结果图像保存到：`plots/actual_vs_predicted.png`
 
-```bash
+查看可用参数：
+
+```
 python -m src.linear_regression --help
 ```
 
-Important flags include:
+重要参数说明：
 
-- `--data`: provide an alternative path to the dataset CSV.
-- `--test-size`: choose the fraction of the dataset reserved for evaluation.
-- `--random-state`: make the train/test split reproducible.
-- `--save-plot`: control where the scatter plot is written (directories are
-  created automatically).
-- `--show-plot`: open the plot interactively after saving it.
+- `--data`：指定数据集路径
+- `--test-size`：设置测试集占比
+- `--random-state`：设置随机种子以保证结果可复现
+- `--save-plot`：指定输出图像保存路径（自动创建文件夹）
+- `--show-plot`：运行后自动弹出可视化窗口
 
-## Sample output
+------
+
+## 样例输出
 
 ```
-Model coefficients:
+模型系数：
     AT: -0.4235
      V: -0.9308
     AP:  1.1172
     RH: -0.6056
-Intercept:  475.7286
+截距:  475.7286
 
-Evaluation metrics on the test set:
-  Mean Squared Error (MSE): 48.7743
-  Root Mean Squared Error (RMSE): 6.9853
-  Mean Absolute Error (MAE): 5.8362
-  R^2 Score: 0.4429
+测试集评估指标：
+  均方误差 (MSE): 48.7743
+  均方根误差 (RMSE): 6.9853
+  平均绝对误差 (MAE): 5.8362
+  决定系数 (R^2): 0.4429
 
-Scatter plot saved to: /path/to/repo/plots/actual_vs_predicted.png
+散点图已保存至: /path/to/repo/plots/actual_vs_predicted.png
 ```
 
-The metrics and the resulting scatter plot will vary when you change the
-random seed, test split size, or dataset.
+> 当你修改随机种子、测试集划分比例或使用完整数据集时，以上结果会有所不同。
 
-## Visualisation
+------
 
-The generated scatter plot mirrors the one shown in the experiment manual: the
-predicted power outputs are plotted against the measured values along with an
-ideal `y = x` reference line to highlight the fit quality of the model.
+## 可视化说明
+
+生成的散点图与实验指导书中的图形一致：
+
+- 横轴：**实际功率输出值（Actual PE）**
+- 纵轴：**模型预测功率输出值（Predicted PE）**
+- 红色对角线：理想预测线 `y = x`
+
+通过比较散点与理想线的贴合程度，可以直观评估模型拟合效果。
